@@ -16,8 +16,17 @@ class Memo
     @@instances
   end
 
-  def create
-    @@instances << self
+  def self.new_id
+    @@instances.size + 1
+  end
+
+  def self.create(title:, content: nil)
+    puts title
+    if title
+      memo = Memo.new(self.new_id, title, content, DateTime.now)
+
+      @@instances << memo
+    end
   end
 
   def save
