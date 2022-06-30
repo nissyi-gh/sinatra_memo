@@ -3,5 +3,5 @@ require 'sinatra/reloader'
 require_relative './memo'
 
 get '/' do
-  'hello'
+  erb :index
 end
