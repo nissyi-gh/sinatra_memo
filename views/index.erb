@@ -14,21 +14,25 @@
     <textarea name="" id="" cols="30" rows="10"></textarea>
     <a href="">Save</a>
     <hr>
-    <ol>
-      <li>
-        <h2>title</h2>
-        <p>
-          content
-        </p>
-        <div>
-          <time>日付</time>
-          <div>
-            <a href="#">編集</a>
-            <a href="#">削除</a>
-          </div>
-        </div>
-      </li>
-    </ol>
+    <% if @memos.empty?  %>
+      <p>投稿がありませんでした。</p>
+    <%  else  %>
+      <ol>
+        <% @memos.each do |memo| %>
+          <li>
+            <h2><%= memo.title %></h2>
+            <p><%= memo.content %></p>
+            <div>
+              <time><%= memo.created_at %></time>
+              <div>
+                <a href="#">編集</a>
+                <a href="#">削除</a>
+              </div>
+            </div>
+          </li>
+        <% end %>
+      </ol>
+    <% end %>
   </main>
 </body>
 </html>
