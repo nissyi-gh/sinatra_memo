@@ -21,12 +21,10 @@ class Memo
   end
 
   def self.create(title:, content: nil)
-    puts title
-    if title
-      memo = Memo.new(self.new_id, title, content, DateTime.now)
+    return if title.empty?
 
-      @@instances << memo
-    end
+    memo = Memo.new(self.new_id, title, content, DateTime.now)
+    @@instances << memo
   end
 
   def save
