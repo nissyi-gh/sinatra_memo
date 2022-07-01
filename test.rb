@@ -66,7 +66,7 @@ class AppTest < Test::Unit::TestCase
 
     delete "/memos/1"
     follow_redirect!
-    !assert_includes last_response.body, title
-    !assert_includes last_response.body, content
+    assert_not_includes last_response.body, title
+    assert_not_includes last_response.body, content
   end
 end
