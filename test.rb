@@ -117,4 +117,22 @@ class AppTest < Test::Unit::TestCase
     assert_includes last_response.body, title
     assert_includes last_response.body, content + edit_text
   end
+
+  def test_fail_edit_because_nothing_title
+    title = 'test_title'
+    content = 'example_text'
+
+    post '/memos', { title: title, content: content }
+    follow_redirect!
+    assert_includes last_response.body, title
+    assert_includes last_response.body, content
+
+    get '/memos/1'
+    patch "/memos/1", { title: '', content: content }
+    follow_redirect!
+    assert last_response.ok?
+    assert_equal "#{TEST_HOST}memos/1", last_request.url.encode('UTF-8')
+    assert_includes last_response.body, title
+    assert_includes last_response.body, content
+  end
 end
