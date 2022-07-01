@@ -21,6 +21,10 @@ post '/memos' do
   redirect to('/')
 end
 
+get '/memos/:memo_id' do
+  erb :edit
+end
+
 delete '/memos/:memo_id' do
   Memo.delete(params[:memo_id])
   redirect to('/')
