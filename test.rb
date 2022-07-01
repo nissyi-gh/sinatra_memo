@@ -69,4 +69,52 @@ class AppTest < Test::Unit::TestCase
     assert_not_includes last_response.body, title
     assert_not_includes last_response.body, content
   end
+
+  def test_edit_memo_title_and_content
+    title = 'test_title'
+    content = 'example_text'
+    edit_text = '_edit!!!'
+
+    post '/memos', { title: title, content: content }
+    follow_redirect!
+    assert_includes last_response.body, title
+    assert_includes last_response.body, content
+
+    patch "/memos/1", { title: title + edit_text, content: content + edit_text }
+    follow_redirect!
+    assert_not_includes last_response.body, title + edit_text
+    assert_not_includes last_response.body, content + edit_text
+  end
+
+  def test_edit_only_memo_title
+    title = 'test_title'
+    content = 'example_text'
+    edit_text = '_edit!!!'
+
+    post '/memos', { title: title, content: content }
+    follow_redirect!
+    assert_includes last_response.body, title
+    assert_includes last_response.body, content
+
+    patch "/memos/1", { title: title + edit_text }
+    follow_redirect!
+    assert_not_includes last_response.body, title + edit_text
+    assert_not_includes last_response.body, content
+  end
+
+  def test_edit_only_memo_content
+    title = 'test_title'
+    content = 'example_text'
+    edit_text = '_edit!!!'
+
+    post '/memos', { title: title, content: content }
+    follow_redirect!
+    assert_includes last_response.body, title
+    assert_includes last_response.body, content
+
+    patch "/memos/1", { content: content + edit_text }
+    follow_redirect!
+    assert_not_includes last_response.body, title
+    assert_not_includes last_response.body, content + edit_text
+  end
 end
