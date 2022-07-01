@@ -38,6 +38,10 @@ class Memo
     end
   end
 
+  def self.find(memo_id)
+    @@instances.find { |memo| memo.id == memo_id.to_i }
+  end
+
   def save
     # ファイルへの保存処理を書く
   end

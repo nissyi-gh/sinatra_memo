@@ -22,6 +22,7 @@ post '/memos' do
 end
 
 get '/memos/:memo_id' do
+  @memo = Memo.find(params[:memo_id])
   erb :edit
 end
 
