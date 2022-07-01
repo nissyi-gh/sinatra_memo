@@ -42,6 +42,13 @@ class Memo
     @@instances.find { |memo| memo.id == memo_id.to_i }
   end
 
+  def patch(title:, content:)
+    return if title.empty?
+
+    self.title = title
+    self.content = content
+  end
+
   def save
     # ファイルへの保存処理を書く
   end

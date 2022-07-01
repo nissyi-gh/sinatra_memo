@@ -30,3 +30,10 @@ delete '/memos/:memo_id' do
   Memo.delete(params[:memo_id])
   redirect to('/')
 end
+
+patch '/memos/:memo_id' do
+  memo = Memo.find(params[:memo_id])
+  memo.patch(title: params[:title], content: params[:content])
+
+  redirect to('.')
+end
