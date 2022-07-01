@@ -50,6 +50,8 @@ class AppTest < Test::Unit::TestCase
     content = 'example_text'
 
     post '/memos', { title: title, content: content }
+    follow_redirect!
+    assert_equal TEST_HOST, last_request.url
     assert_includes last_response.body, 'タイトルが入力されていません。'
   end
 end
