@@ -5,7 +5,7 @@ require_relative './memo'
 error = nil
 
 get '/' do
-  @memos = Memo.all
+  @memos = Memo.all_ignore_deleted
   @error = error
   erb :index
 end
@@ -18,5 +18,10 @@ post '/memos' do
   memo = Memo.create(title: params[:title], content: params[:content])
   error = memo ? nil : 'タイトルが入力されていません。'
 
+  redirect to('/')
+end
+
+delete '/memos/:memo_id' do
+  Memo.delete(params[:memo_id])
   redirect to('/')
 end
