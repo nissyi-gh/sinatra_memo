@@ -32,6 +32,8 @@ delete '/memos/:memo_id' do
 end
 
 patch '/memos/:memo_id' do
+  redirect back if params[:title].empty?
+
   memo = Memo.find(params[:memo_id])
   memo.patch(title: params[:title], content: params[:content])
 
