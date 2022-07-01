@@ -33,4 +33,23 @@ class AppTest < Test::Unit::TestCase
     assert_includes last_response.body, title
     assert_includes last_response.body, content
   end
+
+  def test_post_valid_memo_not_include_content
+    title = 'test_title'
+    content = nil
+
+    post '/memos', { title: title, content: content }
+    follow_redirect!
+    assert last_response.ok?
+    assert_equal TEST_HOST, last_request.url
+    assert_includes last_response.body, title
+  end
+
+  def test_post_invalid_memo_because_not_include_title
+    title = ''
+    content = 'example_text'
+
+    post '/memos', { title: title, content: content }
+    assert_equal 403, last_response.status
+  end
 end
