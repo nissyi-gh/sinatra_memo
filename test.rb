@@ -6,6 +6,7 @@ require 'rack/test'
 
 class AppTest < Test::Unit::TestCase
   include Rack::Test::Methods
+  TEST_HOST = 'http://example.org/'
 
   def app
     Sinatra::Application
@@ -28,8 +29,8 @@ class AppTest < Test::Unit::TestCase
     post '/memos', { title: title, content: content }
     follow_redirect!
     assert last_response.ok?
-    assert_equal 'http://example.org/', last_request.url
-    assert_includes title, last_response.body
-    assert_includes content, last_response.body
+    assert_equal TEST_HOST, last_request.url
+    assert_includes last_response.body, title
+    assert_includes last_response.body, content
   end
 end
