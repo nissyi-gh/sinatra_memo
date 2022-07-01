@@ -32,6 +32,10 @@
               <time><%= memo.created_at %></time>
               <div>
                 <form action="/memos/<%= memo.id %>" method="post">
+                  <input type="hidden" name="_method" value="PATCH">
+                  <input type="submit" value="編集">
+                </form>
+                <form action="/memos/<%= memo.id %>" method="post">
                   <input type="hidden" name="_method" value="DELETE">
                   <input type="submit" value="削除">
                 </form>
