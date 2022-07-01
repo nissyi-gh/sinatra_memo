@@ -54,4 +54,19 @@ class AppTest < Test::Unit::TestCase
     assert_equal TEST_HOST, last_request.url
     assert_includes last_response.body, 'タイトルが入力されていません。'
   end
+
+  def test_delete_memo
+    title = 'test_title'
+    content = 'example_text'
+
+    post '/memos', { title: title, content: content }
+    follow_redirect!
+    assert_includes last_response.body, title
+    assert_includes last_response.body, content
+
+    delete "/memos/1"
+    follow_redirect!
+    !assert_includes last_response.body, title
+    !assert_includes last_response.body, content
+  end
 end
