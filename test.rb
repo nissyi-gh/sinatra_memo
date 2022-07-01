@@ -82,8 +82,8 @@ class AppTest < Test::Unit::TestCase
 
     patch "/memos/1", { title: title + edit_text, content: content + edit_text }
     follow_redirect!
-    assert_not_includes last_response.body, title + edit_text
-    assert_not_includes last_response.body, content + edit_text
+    assert_includes last_response.body, title + edit_text
+    assert_includes last_response.body, content + edit_text
   end
 
   def test_edit_only_memo_title
@@ -96,10 +96,10 @@ class AppTest < Test::Unit::TestCase
     assert_includes last_response.body, title
     assert_includes last_response.body, content
 
-    patch "/memos/1", { title: title + edit_text }
+    patch "/memos/1", { title: title + edit_text, content: content }
     follow_redirect!
-    assert_not_includes last_response.body, title + edit_text
-    assert_not_includes last_response.body, content
+    assert_includes last_response.body, title + edit_text
+    assert_includes last_response.body, content
   end
 
   def test_edit_only_memo_content
@@ -112,9 +112,9 @@ class AppTest < Test::Unit::TestCase
     assert_includes last_response.body, title
     assert_includes last_response.body, content
 
-    patch "/memos/1", { content: content + edit_text }
+    patch "/memos/1", { title: title, content: content + edit_text }
     follow_redirect!
-    assert_not_includes last_response.body, title
-    assert_not_includes last_response.body, content + edit_text
+    assert_includes last_response.body, title
+    assert_includes last_response.body, content + edit_text
   end
 end
