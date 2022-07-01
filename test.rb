@@ -50,6 +50,6 @@ class AppTest < Test::Unit::TestCase
     content = 'example_text'
 
     post '/memos', { title: title, content: content }
-    assert_equal 403, last_response.status
+    assert_includes last_response.body, 'タイトルが入力されていません。'
   end
 end
