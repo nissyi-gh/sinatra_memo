@@ -66,4 +66,19 @@ class Memo
     @@instances.each { |memo| memos_hash["memo_#{memo.id}".to_sym] = memo.to_h }
     File.open('./memos.json', 'w') { |file| file.write(memos_hash.to_json) }
   end
+
+  def self.load
+    memos_json = {}
+    File.open('./memos.json') { |file| memos_json = JSON.parse(file.readline, symbolize_names: true)}
+
+    memos_json.each_value do |memo|
+      @@instances << Memo.new(
+        memo[:id],
+        memo[:title],
+        memo[:content],
+        DateTime.parse(memo[:created_at]),
+        memo[:daleted_at] ? DateTime.parse(memo[:deleted_at]) : nil
+      )
+    end
+  end
 end

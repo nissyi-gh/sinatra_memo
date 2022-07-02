@@ -3,6 +3,7 @@ require 'sinatra/reloader'
 require_relative './memo'
 
 error = nil
+Memo.load
 
 get '/' do
   @memos = Memo.all_ignore_deleted
