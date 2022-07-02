@@ -93,6 +93,10 @@ li > h2 {
   justify-content: space-between;
 }
 
+time {
+  letter-spacing: normal;
+}
+
 .edit_button {
   margin-right: 8px;
 }
