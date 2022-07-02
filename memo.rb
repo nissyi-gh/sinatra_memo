@@ -2,7 +2,6 @@ class Memo
   attr_reader :id
   attr_accessor :title, :content, :created_at, :deleted_at
 
-  @@file = File.open('./memos.json', 'a')
   @@instances = []
 
   def initialize(id, title, content, created_at, deleted_at = nil)
@@ -30,12 +29,14 @@ class Memo
 
     memo = Memo.new(self.new_id, title, content, DateTime.now)
     @@instances << memo
+    self.save
   end
 
   def self.delete(memo_id)
     @@instances.each do |memo|
       memo.deleted_at = DateTime.now if memo.id == memo_id.to_i
     end
+    self.save
   end
 
   def self.find(memo_id)
@@ -47,9 +48,22 @@ class Memo
 
     self.title = title
     self.content = content
+    Memo.save
   end
 
-  def save
-    # ファイルへの保存処理を書く
+  def to_h
+    {
+      id: id,
+      title: title,
+      content: content,
+      created_at: created_at,
+      deleted_at: deleted_at
+    }
+  end
+
+  def self.save
+    memos_hash = {}
+    @@instances.each { |memo| memos_hash["memo_#{memo.id}".to_sym] = memo.to_h }
+    File.open('./memos.json', 'w') { |file| file.write(memos_hash.to_json) }
   end
 end
