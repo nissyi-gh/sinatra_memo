@@ -3,6 +3,7 @@ class Memo
   attr_accessor :title, :content, :created_at, :deleted_at
 
   @@instances = []
+  @@JSON_FILE = './memos.json'
 
   def initialize(id, title, content, created_at, deleted_at = nil)
     @id = id
@@ -17,7 +18,7 @@ class Memo
   end
 
   def self.all_ignore_deleted
-    @@instances.keep_if { |memo| memo.deleted_at.nil? }
+    @@instances.filter(&:delete?)
   end
 
   def self.new_id
@@ -64,12 +65,12 @@ class Memo
   def self.save
     memos_hash = {}
     @@instances.each { |memo| memos_hash["memo_#{memo.id}".to_sym] = memo.to_h }
-    File.open('./memos.json', 'w') { |file| file.write(memos_hash.to_json) }
+    File.open(@@JSON_FILE, 'w') { |file| file.write(memos_hash.to_json) }
   end
 
   def self.load
     memos_json = {}
-    File.open('./memos.json') { |file| memos_json = JSON.parse(file.readline, symbolize_names: true)}
+    File.open(@@JSON_FILE, 'r') { |file| memos_json = JSON.parse(file.readline, symbolize_names: true)}
 
     memos_json.each_value do |memo|
       @@instances << Memo.new(
@@ -80,5 +81,9 @@ class Memo
         memo[:daleted_at] ? DateTime.parse(memo[:deleted_at]) : nil
       )
     end
+  end
+
+  def delete?
+    deleted_at.nil?
   end
 end
