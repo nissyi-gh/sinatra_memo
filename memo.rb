@@ -3,7 +3,7 @@ class Memo
   attr_accessor :title, :content, :created_at, :deleted_at
 
   @@instances = []
-  @@JSON_FILE = './memos.json'
+  @@JSON_FILE = './.memos.json'
 
   def initialize(id, title, content, created_at, deleted_at = nil)
     @id = id
