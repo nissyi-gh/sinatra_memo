@@ -67,6 +67,8 @@ class Memo
   end
 
   def self.save
+    return if ENV['APP_ENV'] == 'test'
+
     memos_hash = {}
     @@instances.each { |memo| memos_hash["memo_#{memo.id}".to_sym] = memo.to_h }
     File.open(@@JSON_FILE, 'w') { |file| file.write(memos_hash.to_json) }
