@@ -12,6 +12,10 @@ class AppTest < Test::Unit::TestCase
     Sinatra::Application
   end
 
+  def setup
+    Memo.clear
+  end
+
   def test_home_response
     get '/'
     assert last_response.ok?

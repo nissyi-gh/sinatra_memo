@@ -25,6 +25,10 @@ class Memo
     @@instances.size + 1
   end
 
+  def self.clear
+    @@instances.clear
+  end
+
   def self.create(title:, content: nil)
     return if title.empty?
 
