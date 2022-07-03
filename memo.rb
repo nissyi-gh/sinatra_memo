@@ -69,7 +69,7 @@ class Memo
   end
 
   def self.load
-    return unless File.exist?(@@JSON_FILE)
+    return if File.empty?(@@JSON_FILE) || !File.exist?(@@JSON_FILE)
 
     memos_json = {}
     File.open(@@JSON_FILE, 'r') { |file| memos_json = JSON.parse(file.readline, symbolize_names: true)}
