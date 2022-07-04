@@ -28,6 +28,7 @@ header {
 
 .error_text {
   width: 80%;
+  color: red;
 }
 
 textarea {
