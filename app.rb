@@ -3,6 +3,7 @@
 require 'sinatra'
 require 'sinatra/reloader'
 require_relative './memo'
+include ERB::Util
 
 error = nil
 Memo.load
@@ -18,7 +19,7 @@ not_found do
 end
 
 post '/memos' do
-  memo = Memo.create(title: params[:title], content: params[:content])
+  memo = Memo.create(title: html_escape(params[:title]), content: html_escape(params[:content]))
   error = memo ? nil : 'タイトルが入力されていません。'
 
   redirect to('/')
@@ -39,7 +40,7 @@ patch '/memos/:memo_id' do
     redirect to("/memos/#{params[:memo_id]}")
   else
     memo = Memo.find(params[:memo_id])
-    memo.patch(title: params[:title], content: params[:content])
+    memo.patch(title: html_escape(params[:title]), content: html_escape(params[:content]))
     redirect to('.')
   end
 end
