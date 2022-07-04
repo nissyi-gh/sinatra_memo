@@ -11,7 +11,7 @@ class AppTest < Test::Unit::TestCase
   TEST_HOST = 'http://example.org/'
 
   def app
-    Sinatra::Application
+    App
   end
 
   def setup
