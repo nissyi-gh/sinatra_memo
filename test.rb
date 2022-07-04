@@ -19,6 +19,7 @@ class AppTest < Test::Unit::TestCase
     @title = 'test_title'
     @content = 'example_text'
     @edit = 'edit'
+    @error_message_without_tile = 'タイトルが入力されていません。'
   end
 
   def test_home_response
@@ -56,7 +57,7 @@ class AppTest < Test::Unit::TestCase
     post '/memos', { title: @title, content: @content }
     follow_redirect!
     assert_equal TEST_HOST, last_request.url
-    assert_includes last_response.body, 'タイトルが入力されていません。'
+    assert_includes last_response.body, @error_message_without_tile
   end
 
   def test_delete_memo
@@ -118,6 +119,7 @@ class AppTest < Test::Unit::TestCase
     follow_redirect!
     assert last_response.ok?
     assert_equal "#{TEST_HOST}memos/1", last_request.url.encode('UTF-8')
+    assert_includes last_response.body, @error_message_without_tile
     assert_includes last_response.body, @title
     assert_includes last_response.body, @content
   end
