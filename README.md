@@ -13,6 +13,7 @@ Ruby, およびBundlerがインストールされている必要があります�
   - `git checkout develop` でdevelopブランチに移動します。
   - `bundle install` をします。
   - `bundle exec ruby app.rb` を実行します。
+  - `localhost:4567` へアクセスすると画面が表示されます。
   - 終了時は`Ctrl+C`を実行してください。
 
 ## 使い方
