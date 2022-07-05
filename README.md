@@ -5,6 +5,7 @@ Sinatraを使用して作成したメモアプリです。
 <img width="320" alt="スクリーンショット 2022-07-04 16 03 36" src="https://user-images.githubusercontent.com/81596063/177102542-9b985633-fb41-4c43-baf7-de65b1645df5.png">
 
 ## 起動するまでの手順
+Ruby, およびBundlerがインストールされている必要があります。
 
 1. nissyi-gh/developから、自分のリポジトリへ[Fork](https://docs.github.com/ja/get-started/quickstart/fork-a-repo#forking-a-repository)します
 2. [git clone](https://docs.github.com/ja/get-started/quickstart/fork-a-repo#cloning-your-forked-repository)します
