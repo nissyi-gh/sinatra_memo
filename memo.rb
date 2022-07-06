@@ -3,6 +3,8 @@
 require_relative './memo_db'
 
 class Memo
+  extend MemoDb
+
   attr_reader :id
   attr_accessor :title, :content, :created_at, :deleted_at
 
