@@ -4,15 +4,14 @@ require 'pg'
 
 module MemoDb
   MEMOS_TABLE_NAME = 'memos'
-  connect = PG::Connection.open(dbname: 'postgres')
+  CONNECT = PG::Connection.open(dbname: 'postgres')
 
   def create_table
-    connect.exec("CLEATE TABLE #{MEMOS_TABLE_NAME}(
-      id INTEGER,
-      title TEXT,
+    CONNECT.exec("CREATE TABLE #{MEMOS_TABLE_NAME}(
+      id SERIAL,
+      title TEXT NOT NULL,
       content TEXT,
-      created_at TIMESTAMP,
-      deleted_at TIMESTAMP;)"
-    )
+      created_at TIMESTAMP NOT NULL DEFAULT now(),
+      deleted_at TIMESTAMP DEFAULT null);")
   end
 end
