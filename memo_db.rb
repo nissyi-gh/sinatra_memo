@@ -4,7 +4,7 @@ require 'pg'
 
 module MemoDb
   MEMOS_TABLE_NAME = 'memos'
-  connect = PG::Connection(dbname: 'postgres')
+  connect = PG::Connection.open(dbname: 'postgres')
 
   def create_table
     connect.exec("CLEATE TABLE #{MEMOS_TABLE_NAME}(

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative './memo_db'
+
 class Memo
   attr_reader :id
   attr_accessor :title, :content, :created_at, :deleted_at
