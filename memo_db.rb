@@ -18,4 +18,8 @@ module MemoDb
   def self.load
     CONNECT.exec("SELECT * FROM #{MEMOS_TABLE_NAME};")
   end
+
+  def self.delete(memo_id)
+    CONNECT.exec("UPDATE #{MEMOS_TABLE_NAME} SET deleted_at = now() WHERE id = #{memo_id}")
+  end
 end

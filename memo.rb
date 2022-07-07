@@ -46,7 +46,8 @@ class Memo
 
     def delete(memo_id)
       @instances.each { |memo| memo.deleted_at = DateTime.now if memo.id == memo_id.to_i }
-      save
+      MemoDb.delete(memo_id)
+      # save
     end
 
     def find(memo_id)
