@@ -6,7 +6,7 @@ module MemoDb
   MEMOS_TABLE_NAME = 'memos'
   CONNECT = PG::Connection.open(dbname: 'postgres')
 
-  def create_table
+  def self.create_table
     CONNECT.exec("CREATE TABLE #{MEMOS_TABLE_NAME}(
       id SERIAL,
       title TEXT NOT NULL,
@@ -16,7 +16,11 @@ module MemoDb
   end
 
   def self.load
-    CONNECT.exec("SELECT * FROM #{MEMOS_TABLE_NAME};")
+    begin
+      CONNECT.exec("SELECT * FROM #{MEMOS_TABLE_NAME};")
+    rescue
+      create_table
+    end
   end
 
   def self.delete(memo_id)
