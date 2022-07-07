@@ -61,6 +61,21 @@ class Memo
       File.open(JSON_FILE, 'w') { |file| file.write(memos_hash.to_json) }
     end
 
+    def load_from_db
+      memos = MemoDb.load
+
+      memos.each do |memo|
+        memo.transform_keys!(&:to_sym)
+        @instances << Memo.new(
+          memo[:id],
+          memo[:title],
+          memo[:content],
+          DateTime.parse(memo[:created_at]),
+          memo[:daleted_at] ? DateTime.parse(memo[:deleted_at]) : nil
+        )
+      end
+    end
+
     def load
       return if File.empty?(JSON_FILE) || !File.exist?(JSON_FILE)
 

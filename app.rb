@@ -10,7 +10,7 @@ class App < Sinatra::Application
   error = nil
   ERROR_MESSAGE_WITHOUT_TITLE = 'タイトルが入力されていません。'
 
-  Memo.load
+  Memo.load_from_db
 
   get '/' do
     @memos = Memo.all_ignore_deleted

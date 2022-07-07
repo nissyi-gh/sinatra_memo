@@ -14,4 +14,8 @@ module MemoDb
       created_at TIMESTAMP NOT NULL DEFAULT now(),
       deleted_at TIMESTAMP DEFAULT null);")
   end
+
+  def self.load
+    CONNECT.exec("SELECT * FROM #{MEMOS_TABLE_NAME};")
+  end
 end
