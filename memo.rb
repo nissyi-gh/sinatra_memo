@@ -39,9 +39,10 @@ class Memo
     def create(title:, content: nil)
       return if title.empty?
 
-      memo = Memo.new(new_id, title, content, DateTime.now)
+      memo = Memo.new(new_id, title, content, Time.now)
       @instances << memo
-      save
+      MemoDb.create(memo)
+      # save
     end
 
     def delete(memo_id)

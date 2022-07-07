@@ -22,4 +22,13 @@ module MemoDb
   def self.delete(memo_id)
     CONNECT.exec("UPDATE #{MEMOS_TABLE_NAME} SET deleted_at = now() WHERE id = #{memo_id}")
   end
+
+  def self.create(memo)
+    CONNECT.exec("INSERT INTO #{MEMOS_TABLE_NAME}(title, content, created_at, deleted_at) VALUES (
+      '#{memo.title}',
+      '#{memo.content}',
+      '#{memo.created_at}',
+      null
+    );")
+  end
 end
