@@ -72,7 +72,7 @@ class Memo
           memo[:title],
           memo[:content],
           DateTime.parse(memo[:created_at]),
-          memo[:daleted_at] ? DateTime.parse(memo[:deleted_at]) : nil
+          memo[:deleted_at] ? DateTime.parse(memo[:deleted_at]) : nil
         )
       end
     end
@@ -89,7 +89,7 @@ class Memo
           memo[:title],
           memo[:content],
           DateTime.parse(memo[:created_at]),
-          memo[:daleted_at] ? DateTime.parse(memo[:deleted_at]) : nil
+          memo[:deleted_at] ? DateTime.parse(memo[:deleted_at]) : nil
         )
       end
     end
