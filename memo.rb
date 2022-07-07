@@ -68,7 +68,7 @@ class Memo
       memos.each do |memo|
         memo.transform_keys!(&:to_sym)
         @instances << Memo.new(
-          memo[:id],
+          memo[:id].to_i,
           memo[:title],
           memo[:content],
           DateTime.parse(memo[:created_at]),
