@@ -101,7 +101,8 @@ class Memo
 
     self.title = title
     self.content = content
-    Memo.save
+    MemoDb.update(id, title, content)
+    # Memo.save
   end
 
   def to_h

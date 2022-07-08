@@ -34,6 +34,10 @@ module MemoDb
     );")
   end
 
+  def self.update(memo_id, title, content)
+    CONNECT.exec("UPDATE #{MEMOS_TABLE_NAME} SET title = '#{title}', content = '#{content}' WHERE id = #{memo_id};")
+  end
+
   def self.delete_test_case
     CONNECT.exec("DELETE FROM #{MEMOS_TABLE_NAME} WHERE title = 'test_title';")
   end
