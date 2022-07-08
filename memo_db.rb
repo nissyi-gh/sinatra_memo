@@ -16,11 +16,9 @@ module MemoDb
   end
 
   def self.load
-    begin
-      CONNECT.exec("SELECT * FROM #{MEMOS_TABLE_NAME};")
-    rescue
-      create_table
-    end
+    CONNECT.exec("SELECT * FROM #{MEMOS_TABLE_NAME};")
+  rescue StandardError
+    create_table
   end
 
   def self.delete(memo_id)
