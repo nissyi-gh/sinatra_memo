@@ -35,4 +35,8 @@ module MemoDb
       null
     );")
   end
+
+  def self.delete_test_case
+    CONNECT.exec("DELETE FROM #{MEMOS_TABLE_NAME} WHERE title = 'test_title';")
+  end
 end

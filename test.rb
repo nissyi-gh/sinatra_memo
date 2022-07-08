@@ -22,6 +22,10 @@ class AppTest < Test::Unit::TestCase
     @error_message_without_tile = 'タイトルが入力されていません。'
   end
 
+  def self.shutdown
+    MemoDb.delete_test_case
+  end
+
   def test_home_response
     get '/'
     assert last_response.ok?
