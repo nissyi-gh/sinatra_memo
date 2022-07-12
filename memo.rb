@@ -38,14 +38,14 @@ class Memo
     def create(title:, content: nil)
       return if title.empty?
 
-      memo = Memo.new(new_id, title, content, DateTime.now)
+      memo = Memo.new(new_id, title, content, Time.now)
       load
       @instances << memo
       save
     end
 
     def delete(memo_id)
-      @instances.each { |memo| memo.deleted_at = DateTime.now if memo.id == memo_id.to_i }
+      @instances.each { |memo| memo.deleted_at = Time.now if memo.id == memo_id.to_i }
       save
     end
 
@@ -73,8 +73,8 @@ class Memo
           memo[:id],
           memo[:title],
           memo[:content],
-          DateTime.parse(memo[:created_at]),
-          memo[:deleted_at] ? DateTime.parse(memo[:deleted_at]) : nil
+          Time.parse(memo[:created_at]),
+          memo[:deleted_at] ? Time.parse(memo[:deleted_at]) : nil
         )
       end
     end
