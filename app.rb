@@ -10,8 +10,6 @@ class App < Sinatra::Application
   error = nil
   ERROR_MESSAGE_WITHOUT_TITLE = 'タイトルが入力されていません。'
 
-  Memo.load
-
   get '/' do
     @memos = Memo.all_ignore_deleted
     @error = request.url == request.referer ? error : nil

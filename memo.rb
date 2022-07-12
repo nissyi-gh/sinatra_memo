@@ -17,14 +17,17 @@ class Memo
 
   class << self
     def all
+      load
       @instances
     end
 
     def all_ignore_deleted
+      load
       @instances.reject(&:delete?)
     end
 
     def new_id
+      load
       @instances.size + 1
     end
 
@@ -36,6 +39,7 @@ class Memo
       return if title.empty?
 
       memo = Memo.new(new_id, title, content, DateTime.now)
+      load
       @instances << memo
       save
     end
