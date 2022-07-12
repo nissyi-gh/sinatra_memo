@@ -26,7 +26,7 @@ class App < Sinatra::Application
 
       erb :index
     else
-      memo = Memo.create(title: params[:title], content: params[:content])
+      Memo.create(title: params[:title], content: params[:content])
 
       redirect to('/')
     end
