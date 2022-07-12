@@ -1,8 +1,8 @@
 <%= erb :header %>
     <form action="/memos/<%= @memo.id %>" method="post">
       <input type="hidden" name="_method" value="PATCH">
-      <input type="text" name="title" value=<%= @memo.title %> class="input_title" placeholder="タイトル（必須）">
-      <textarea name="content" id="" cols="30" rows="10"><%= @memo.content %></textarea>
+      <input type="text" name="title" value=<%= html_escape(@memo.title) %> class="input_title" placeholder="タイトル（必須）">
+      <textarea name="content" id="" cols="30" rows="10"><%= html_escape(@memo.content) %></textarea>
       <div class="form_bottom">
         <p class="error_text"><%= @error %></p>
         <input type="submit" class="action_button" value="更新する">

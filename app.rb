@@ -6,7 +6,6 @@ require 'sinatra/base'
 require_relative './memo'
 
 class App < Sinatra::Application
-  include ERB::Util
   error = nil
   ERROR_MESSAGE_WITHOUT_TITLE = 'タイトルが入力されていません。'
 
@@ -21,7 +20,7 @@ class App < Sinatra::Application
   end
 
   post '/memos' do
-    memo = Memo.create(title: html_escape(params[:title]), content: html_escape(params[:content]))
+    memo = Memo.create(title: params[:title], content: params[:content])
     error = memo ? nil : ERROR_MESSAGE_WITHOUT_TITLE
 
     redirect to('/')
@@ -44,7 +43,7 @@ class App < Sinatra::Application
       redirect to("/memos/#{params[:memo_id]}")
     else
       memo = Memo.find(params[:memo_id])
-      memo.patch(title: html_escape(params[:title]), content: html_escape(params[:content]))
+      memo.patch(title: params[:title], content: params[:content])
       redirect to('/')
     end
   end
