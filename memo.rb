@@ -63,6 +63,7 @@ class Memo
       memos_json = {}
       File.open(JSON_FILE, 'r') { |file| memos_json = JSON.parse(file.readline, symbolize_names: true) }
 
+      clear
       memos_json.each_value do |memo|
         @instances << Memo.new(
           memo[:id],
