@@ -1,18 +1,4 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sinatra Memo App</title>
-  <link rel="stylesheet" href="https://unpkg.com/ress/dist/ress.min.css" />
-  <link rel="stylesheet" href="/style.css" />
-</head>
-<body>
-  <header>
-    <h1>Sinatra Memo App</h1>
-  </header>
-  <main>
+<%= erb :header %>
     <form action="/memos" method="post">
       <input type="text" name="title" class="input_title" placeholder="タイトル（必須）">
       <textarea name="content" id="" cols="30" rows="10" placeholder="詳細な内容はこちらへ"></textarea>
