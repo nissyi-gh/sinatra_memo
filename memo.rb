@@ -21,7 +21,7 @@ class Memo
     end
 
     def all_ignore_deleted
-      @instances.filter(&:delete?)
+      @instances.reject(&:delete?)
     end
 
     def new_id
@@ -94,6 +94,6 @@ class Memo
   end
 
   def delete?
-    deleted_at.nil?
+    !deleted_at.nil?
   end
 end
