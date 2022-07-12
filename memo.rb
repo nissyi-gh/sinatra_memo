@@ -39,7 +39,6 @@ class Memo
       return if title.empty?
 
       memo = Memo.new(new_id, title, content, Time.now)
-      load
       @instances << memo
       save
     end
