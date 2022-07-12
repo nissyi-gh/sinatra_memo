@@ -51,9 +51,8 @@ class AppTest < Test::Unit::TestCase
 
   def test_post_invalid_memo_because_not_include_title
     post '/memos', { title: '', content: @content }
-    follow_redirect!
-    assert_equal TEST_HOST, last_request.url
-    assert_not_includes last_response.body, @content
+    assert_equal "#{TEST_HOST}memos", last_request.url
+    assert_includes last_response.body, @content
   end
 
   def test_delete_memo
@@ -112,7 +111,6 @@ class AppTest < Test::Unit::TestCase
 
     get '/memos/1'
     patch '/memos/1', { title: '', content: @content }
-    follow_redirect!
     assert last_response.ok?
     assert_equal "#{TEST_HOST}memos/1", last_request.url.encode('UTF-8')
     assert_includes last_response.body, @error_message_without_tile
