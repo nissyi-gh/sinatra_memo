@@ -6,6 +6,7 @@ require 'sinatra/base'
 require_relative './memo'
 
 class App < Sinatra::Application
+  include ERB::Util
   error = nil
   ERROR_MESSAGE_WITHOUT_TITLE = 'タイトルが入力されていません。'
 
