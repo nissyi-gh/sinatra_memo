@@ -58,6 +58,7 @@ class Memo
 
       memos_hash = {}
       @instances.each { |memo| memos_hash["memo_#{memo.id}".to_sym] = memo.to_h }
+      # 本来ならファイルロックをするべき
       File.open(JSON_FILE, 'w') { |file| file.write(memos_hash.to_json) }
     end
 
