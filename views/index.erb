@@ -1,37 +1,33 @@
-<%= erb :header %>
-    <form action="/memos" method="post">
-      <input type="text" name="title" class="input_title" placeholder="タイトル（必須）">
-      <textarea name="content" id="" cols="30" rows="10" placeholder="詳細な内容はこちらへ"><%= html_escape(@content) %></textarea>
-      <div class="form_bottom">
-        <p class="error_text"><%= @error %></p>
-        <input type="submit" class="action_button" value="保存する">
-      </div>
-    </form>
-    <hr>
-    <% if @memos.empty?  %>
-      <div class="memo_list">
-        <p class="not_exist">メモがありません。</p>
-      </div>
-    <%  else  %>
-      <ol class="memo_list">
-        <% @memos.each do |memo| %>
-          <li>
-            <h2><%= html_escape(memo.title) %></h2>
-            <p class="memo_content"><%= html_escape(memo.content) %></p>
-            <div class="memo_bottom">
-              <time><%= memo.created_at.strftime('%Y/%m/%d %H:%M') %></time>
-              <div class="action_buttons_wrapper">
-                <a href="/memos/<%= memo.id %>" class="action_button edit_button">編集</a>
-                <form action="/memos/<%= memo.id %>" method="post">
-                  <input type="hidden" name="_method" value="DELETE">
-                  <input type="submit" value="削除" class="action_button ">
-                </form>
-              </div>
-            </div>
-          </li>
-        <% end %>
-      </ol>
+<form action="/memos" method="post">
+  <input type="text" name="title" class="input_title" placeholder="タイトル（必須）">
+  <textarea name="content" id="" cols="30" rows="10" placeholder="詳細な内容はこちらへ"><%= html_escape(@content) %></textarea>
+  <div class="form_bottom">
+    <p class="error_text"><%= @error %></p>
+    <input type="submit" class="action_button" value="保存する">
+  </div>
+</form>
+<hr>
+<% if @memos.empty?  %>
+  <div class="memo_list">
+    <p class="not_exist">メモがありません。</p>
+  </div>
+<%  else  %>
+  <ol class="memo_list">
+    <% @memos.each do |memo| %>
+      <li>
+        <h2><%= html_escape(memo.title) %></h2>
+        <p class="memo_content"><%= html_escape(memo.content) %></p>
+        <div class="memo_bottom">
+          <time><%= memo.created_at.strftime('%Y/%m/%d %H:%M') %></time>
+          <div class="action_buttons_wrapper">
+            <a href="/memos/<%= memo.id %>" class="action_button edit_button">編集</a>
+            <form action="/memos/<%= memo.id %>" method="post">
+              <input type="hidden" name="_method" value="DELETE">
+              <input type="submit" value="削除" class="action_button ">
+            </form>
+          </div>
+        </div>
+      </li>
     <% end %>
-  </main>
-</body>
-</html>
+  </ol>
+<% end %>
