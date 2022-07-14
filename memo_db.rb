@@ -15,7 +15,7 @@ module MemoDb
   end
 
   def self.load
-    @@connect.exec("SELECT * FROM memos;")
+    @@connect.exec("SELECT * FROM memos ORDER BY id;")
   rescue StandardError
     create_table
   end
