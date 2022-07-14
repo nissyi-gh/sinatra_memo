@@ -7,7 +7,7 @@ module MemoDb
   @@table_name = ENV['APP_ENV'] == 'test' ? 'memos_test' : 'memos'
 
   def self.create_table
-    @@connect.exec("CREATE TABLE #{@@table_name}(
+    @@connect.exec("CREATE TABLE memos(
       id SERIAL,
       title TEXT NOT NULL,
       content TEXT,
@@ -16,34 +16,27 @@ module MemoDb
   end
 
   def self.load
-    @@connect.exec("SELECT * FROM #{@@table_name} ORDER BY id;")
+    @@connect.exec_params("SELECT * FROM memos ORDER BY id;")
   rescue StandardError
     create_table
   end
 
   def self.delete(memo_id)
-    @@connect.exec("UPDATE #{@@table_name} SET deleted_at = now() WHERE id = #{memo_id}")
+    @@connect.exec_params('UPDATE memos SET deleted_at = now() WHERE id = $1', [memo_id])
   end
 
   def self.find(memo_id)
-    memo = @@connect.exec("SELECT * FROM #{@@table_name} WHERE id = #{memo_id};")
+    memo = @@connect.exec_params('SELECT * FROM memos WHERE id = $1', [memo_id])
 
     memo.ntuples.zero? ? nil : memo
   end
 
   def self.create(title, content, created_at)
-    @@connect.exec(
-      <<~SQL
-        INSERT INTO #{@@table_name}(title, content, created_at, deleted_at) VALUES (
-        '#{title}',
-        '#{content}',
-        '#{created_at}',
-        null);
-      SQL
+    @@connect.exec_params('INSERT INTO memos(title, content) VALUES ($1, $2)', [title, content]
     )
   end
 
   def self.update(memo_id, title, content)
-    @@connect.exec("UPDATE #{@@table_name} SET title = '#{title}', content = '#{content}' WHERE id = #{memo_id};")
+    @@connect.exec('UPDATE memos SET title = $1, content = $2 WHERE id = $3', [title, content, memo_id])
   end
 end
