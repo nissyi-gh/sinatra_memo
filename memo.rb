@@ -9,7 +9,6 @@ class Memo
   attr_accessor :title, :content, :created_at, :deleted_at
 
   @instances = []
-  JSON_FILE = './.memos.json'
 
   def initialize(id, title, content, created_at, deleted_at = nil)
     @id = id
@@ -21,17 +20,17 @@ class Memo
 
   class << self
     def all
-      load
+      load_from_db
       @instances
     end
 
     def all_ignore_deleted
-      load
+      load_from_db
       @instances.reject(&:delete?)
     end
 
     def new_id
-      load
+      load_from_db
       @instances.size + 1
     end
 
@@ -56,15 +55,6 @@ class Memo
       @instances.find { |memo| memo.id == memo_id.to_i }
     end
 
-    def save
-      return if ENV['APP_ENV'] == 'test'
-
-      memos_hash = {}
-      @instances.each { |memo| memos_hash["memo_#{memo.id}".to_sym] = memo.to_h }
-      # 本来ならファイルロックをするべき
-      File.open(JSON_FILE, 'w') { |file| file.write(memos_hash.to_json) }
-    end
-
     def load_from_db
       memos = MemoDb.load
 
@@ -76,24 +66,6 @@ class Memo
           memo[:content],
           DateTime.parse(memo[:created_at]),
           memo[:deleted_at] ? DateTime.parse(memo[:deleted_at]) : nil
-        )
-      end
-    end
-
-    def load
-      return if File.empty?(JSON_FILE) || !File.exist?(JSON_FILE) || ENV['APP_ENV'] == 'test'
-
-      memos_json = {}
-      File.open(JSON_FILE, 'r') { |file| memos_json = JSON.parse(file.readline, symbolize_names: true) }
-
-      clear
-      memos_json.each_value do |memo|
-        @instances << Memo.new(
-          memo[:id],
-          memo[:title],
-          memo[:content],
-          Time.parse(memo[:created_at]),
-          memo[:deleted_at] ? Time.parse(memo[:deleted_at]) : nil
         )
       end
     end
