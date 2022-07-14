@@ -4,7 +4,6 @@ require 'pg'
 
 module MemoDb
   @@connect = PG::Connection.open(dbname: 'postgres')
-  @@table_name = ENV['APP_ENV'] == 'test' ? 'memos_test' : 'memos'
 
   def self.create_table
     @@connect.exec("CREATE TABLE memos(
