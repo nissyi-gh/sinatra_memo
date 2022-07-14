@@ -7,14 +7,12 @@ require_relative './memo'
 
 class App < Sinatra::Application
   include ERB::Util
-  error = nil
   ERROR_MESSAGE_WITHOUT_TITLE = 'タイトルが入力されていません。'
 
   Memo.load_from_db
 
   get '/' do
     @memos = Memo.all_ignore_deleted
-    @error = request.url == request.referer ? error : nil
     erb :index
   end
 
@@ -23,15 +21,21 @@ class App < Sinatra::Application
   end
 
   post '/memos' do
-    memo = Memo.create(title: html_escape(params[:title]), content: html_escape(params[:content]))
-    error = memo ? nil : ERROR_MESSAGE_WITHOUT_TITLE
+    if params[:title].empty?
+      @error = ERROR_MESSAGE_WITHOUT_TITLE
+      @content = params[:content]
+      @memos = Memo.all_ignore_deleted
 
-    redirect to('/')
+      erb :index
+    else
+      Memo.create(title: params[:title], content: params[:content])
+
+      redirect to('/')
+    end
   end
 
   get '/memos/:memo_id' do
     @memo = Memo.find(params[:memo_id])
-    @error = request.url == request.referer ? error : nil
     erb :edit
   end
 
@@ -42,11 +46,13 @@ class App < Sinatra::Application
 
   patch '/memos/:memo_id' do
     if params[:title].empty?
-      error = ERROR_MESSAGE_WITHOUT_TITLE
-      redirect to("/memos/#{params[:memo_id]}")
+      @error = ERROR_MESSAGE_WITHOUT_TITLE
+      @memo = Memo.find(params[:memo_id])
+
+      erb :edit
     else
       memo = Memo.find(params[:memo_id])
-      memo.patch(title: html_escape(params[:title]), content: html_escape(params[:content]))
+      memo.patch(title: params[:title], content: params[:content])
       redirect to('/')
     end
   end

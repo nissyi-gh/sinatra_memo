@@ -21,14 +21,17 @@ class Memo
 
   class << self
     def all
+      load
       @instances
     end
 
     def all_ignore_deleted
-      @instances.filter(&:delete?)
+      load
+      @instances.reject(&:delete?)
     end
 
     def new_id
+      load
       @instances.size + 1
     end
 
@@ -58,6 +61,7 @@ class Memo
 
       memos_hash = {}
       @instances.each { |memo| memos_hash["memo_#{memo.id}".to_sym] = memo.to_h }
+      # 本来ならファイルロックをするべき
       File.open(JSON_FILE, 'w') { |file| file.write(memos_hash.to_json) }
     end
 
@@ -77,18 +81,19 @@ class Memo
     end
 
     def load
-      return if File.empty?(JSON_FILE) || !File.exist?(JSON_FILE)
+      return if File.empty?(JSON_FILE) || !File.exist?(JSON_FILE) || ENV['APP_ENV'] == 'test'
 
       memos_json = {}
       File.open(JSON_FILE, 'r') { |file| memos_json = JSON.parse(file.readline, symbolize_names: true) }
 
+      clear
       memos_json.each_value do |memo|
         @instances << Memo.new(
           memo[:id],
           memo[:title],
           memo[:content],
-          DateTime.parse(memo[:created_at]),
-          memo[:deleted_at] ? DateTime.parse(memo[:deleted_at]) : nil
+          Time.parse(memo[:created_at]),
+          memo[:deleted_at] ? Time.parse(memo[:deleted_at]) : nil
         )
       end
     end
@@ -113,6 +118,6 @@ class Memo
   end
 
   def delete?
-    deleted_at.nil?
+    !deleted_at.nil?
   end
 end
