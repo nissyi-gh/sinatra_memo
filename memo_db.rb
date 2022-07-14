@@ -24,6 +24,12 @@ module MemoDb
     @@connect.exec("UPDATE memos SET deleted_at = now() WHERE id = #{memo_id}")
   end
 
+  def self.find(memo_id)
+    memo = @@connect.exec("SELECT * FROM memos WHERE id = #{memo_id};")
+
+    memo.ntuples.zero? ? nil : memo
+  end
+
   def self.create(memo)
     @@connect.exec(
       <<~SQL

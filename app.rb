@@ -36,7 +36,12 @@ class App < Sinatra::Application
 
   get '/memos/:memo_id' do
     @memo = Memo.find(params[:memo_id])
-    erb :edit
+
+    if @memo
+      erb :edit
+    else
+      not_found
+    end
   end
 
   delete '/memos/:memo_id' do

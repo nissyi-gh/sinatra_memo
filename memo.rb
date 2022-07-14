@@ -29,6 +29,23 @@ class Memo
       load_from_db.size + 1
     end
 
+    def pg_result_to_instance(memo)
+      memo.transform_keys!(&:to_sym)
+      Memo.new(
+        memo[:id].to_i,
+        memo[:title],
+        memo[:content],
+        DateTime.parse(memo[:created_at]),
+        memo[:deleted_at] ? DateTime.parse(memo[:deleted_at]) : nil
+      )
+    end
+
+    def find(memo_id)
+      memo = MemoDb.find(memo_id)
+
+      pg_result_to_instance(memo[0]) if memo
+    end
+
     def create(title:, content: nil)
       return if title.empty?
 
@@ -44,14 +61,7 @@ class Memo
       memos = MemoDb.load
 
       memos.map do |memo|
-        memo.transform_keys!(&:to_sym)
-        Memo.new(
-          memo[:id].to_i,
-          memo[:title],
-          memo[:content],
-          DateTime.parse(memo[:created_at]),
-          memo[:deleted_at] ? DateTime.parse(memo[:deleted_at]) : nil
-        )
+        pg_result_to_instance(memo)
       end
     end
   end
