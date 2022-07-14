@@ -42,13 +42,11 @@ class Memo
       memo = Memo.new(new_id, title, content, Time.now)
       @instances << memo
       MemoDb.create(memo)
-      # save
     end
 
     def delete(memo_id)
       @instances.each { |memo| memo.deleted_at = DateTime.now if memo.id == memo_id.to_i }
       MemoDb.delete(memo_id)
-      # save
     end
 
     def find(memo_id)
@@ -102,7 +100,6 @@ class Memo
     self.title = title
     self.content = content
     MemoDb.update(id, title, content)
-    # Memo.save
   end
 
   def to_h
