@@ -14,16 +14,19 @@ class AppTest < Test::Unit::TestCase
     App
   end
 
+  def self.setup
+    MemoDb.create_table('memo_test')
+  end
+
   def setup
-    Memo.clear
     @title = 'test_title'
     @content = 'example_text'
     @edit = 'edit'
     @error_message_without_tile = 'タイトルが入力されていません。'
   end
 
-  def self.shutdown
-    MemoDb.delete_test_case
+  def teardown
+    MemoDb.delete(Memo.all.last.id)
   end
 
   def test_home_response
