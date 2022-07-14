@@ -29,7 +29,7 @@ class Memo
       load_from_db.size + 1
     end
 
-    def pg_result_to_instance(memo)
+    def convert_pg_result_to_memo(memo)
       memo.transform_keys!(&:to_sym)
       Memo.new(
         memo[:id].to_i,
@@ -43,7 +43,7 @@ class Memo
     def find(memo_id)
       memo = MemoDb.find(memo_id)
 
-      pg_result_to_instance(memo[0]) if memo
+      convert_pg_result_to_memo(memo[0]) if memo
     end
 
     def create(title:, content: nil)
@@ -61,7 +61,7 @@ class Memo
       memos = MemoDb.load
 
       memos.map do |memo|
-        pg_result_to_instance(memo)
+        convert_pg_result_to_memo(memo)
       end
     end
   end
