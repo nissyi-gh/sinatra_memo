@@ -8,8 +8,6 @@ class Memo
   attr_reader :id
   attr_accessor :title, :content, :created_at, :deleted_at
 
-  @instances = []
-
   def initialize(id, title, content, created_at, deleted_at = nil)
     @id = id
     @title = title
@@ -21,46 +19,33 @@ class Memo
   class << self
     def all
       load_from_db
-      @instances
     end
 
     def all_ignore_deleted
-      load_from_db
-      @instances.reject(&:delete?)
+      load_from_db.reject(&:delete?)
     end
 
     def new_id
-      load_from_db
-      @instances.size + 1
-    end
-
-    def clear
-      @instances.clear
+      load_from_db.size + 1
     end
 
     def create(title:, content: nil)
       return if title.empty?
 
       memo = Memo.new(new_id, title, content, Time.now)
-      @instances << memo
       MemoDb.create(memo)
     end
 
     def delete(memo_id)
-      @instances.each { |memo| memo.deleted_at = DateTime.now if memo.id == memo_id.to_i }
       MemoDb.delete(memo_id)
-    end
-
-    def find(memo_id)
-      @instances.find { |memo| memo.id == memo_id.to_i }
     end
 
     def load_from_db
       memos = MemoDb.load
 
-      memos.each do |memo|
+      memos.map do |memo|
         memo.transform_keys!(&:to_sym)
-        @instances << Memo.new(
+        Memo.new(
           memo[:id].to_i,
           memo[:title],
           memo[:content],
