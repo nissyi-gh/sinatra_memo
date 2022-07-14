@@ -30,13 +30,13 @@ module MemoDb
     memo.ntuples.zero? ? nil : memo
   end
 
-  def self.create(memo)
+  def self.create(title, content, created_at)
     @@connect.exec(
       <<~SQL
         INSERT INTO memos(title, content, created_at, deleted_at) VALUES (
-        '#{memo.title}',
-        '#{memo.content}',
-        '#{memo.created_at}',
+        '#{title}',
+        '#{content}',
+        '#{created_at}',
         null);
       SQL
     )

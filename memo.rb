@@ -25,10 +25,6 @@ class Memo
       load_from_db.reject(&:delete?)
     end
 
-    def new_id
-      load_from_db.size + 1
-    end
-
     def convert_pg_result_to_memo(memo)
       memo.transform_keys!(&:to_sym)
       Memo.new(
@@ -49,8 +45,7 @@ class Memo
     def create(title:, content: nil)
       return if title.empty?
 
-      memo = Memo.new(new_id, title, content, Time.now)
-      MemoDb.create(memo)
+      MemoDb.create(title, content, Time.now)
     end
 
     def delete(memo_id)
