@@ -14,6 +14,10 @@ class AppTest < Test::Unit::TestCase
     App
   end
 
+  def load_latest_id
+    Memo.all.last.id
+  end
+
   def self.setup
     MemoDb.create_table('memo_test')
   end
@@ -26,7 +30,7 @@ class AppTest < Test::Unit::TestCase
   end
 
   def teardown
-    MemoDb.delete(Memo.all.last.id)
+    MemoDb.delete(load_latest_id)
   end
 
   def test_home_response
@@ -68,7 +72,7 @@ class AppTest < Test::Unit::TestCase
     assert_includes last_response.body, @title
     assert_includes last_response.body, @content
 
-    delete '/memos/1'
+    delete "/memos/#{load_latest_id}"
     follow_redirect!
     assert_not_includes last_response.body, @title
     assert_not_includes last_response.body, @content
@@ -80,7 +84,7 @@ class AppTest < Test::Unit::TestCase
     assert_includes last_response.body, @title
     assert_includes last_response.body, @content
 
-    patch '/memos/1', { title: @title + @edit, content: @content + @edit }
+    patch "/memos/#{load_latest_id}", { title: @title + @edit, content: @content + @edit }
     follow_redirect!
     assert_includes last_response.body, @title + @edit
     assert_includes last_response.body, @content + @edit
@@ -92,7 +96,7 @@ class AppTest < Test::Unit::TestCase
     assert_includes last_response.body, @title
     assert_includes last_response.body, @content
 
-    patch '/memos/1', { title: @title + @edit, content: @content }
+    patch "/memos/#{load_latest_id}", { title: @title + @edit, content: @content }
     follow_redirect!
     assert_includes last_response.body, @title + @edit
     assert_includes last_response.body, @content
@@ -104,7 +108,7 @@ class AppTest < Test::Unit::TestCase
     assert_includes last_response.body, @title
     assert_includes last_response.body, @content
 
-    patch '/memos/1', { title: @title, content: @content + @edit }
+    patch "/memos/#{load_latest_id}", { title: @title, content: @content + @edit }
     follow_redirect!
     assert_includes last_response.body, @title
     assert_includes last_response.body, @content + @edit
@@ -116,10 +120,10 @@ class AppTest < Test::Unit::TestCase
     assert_includes last_response.body, @title
     assert_includes last_response.body, @content
 
-    get '/memos/1'
-    patch '/memos/1', { title: '', content: @content }
+    get "/memos/#{load_latest_id}"
+    patch "/memos/#{load_latest_id}", { title: '', content: @content }
     assert last_response.ok?
-    assert_equal "#{TEST_HOST}memos/1", last_request.url.encode('UTF-8')
+    assert_equal "#{TEST_HOST}memos/#{load_latest_id}", last_request.url.encode('UTF-8')
     assert_includes last_response.body, @error_message_without_tile
     assert_includes last_response.body, @title
     assert_includes last_response.body, @content
