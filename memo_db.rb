@@ -25,12 +25,15 @@ module MemoDb
   end
 
   def self.create(memo)
-    CONNECT.exec("INSERT INTO memos(title, content, created_at, deleted_at) VALUES (
-      '#{memo.title}',
-      '#{memo.content}',
-      '#{memo.created_at}',
-      null
-    );")
+    CONNECT.exec(
+      <<~SQL
+        INSERT INTO memos(title, content, created_at, deleted_at) VALUES (
+        '#{memo.title}',
+        '#{memo.content}',
+        '#{memo.created_at}',
+        null);
+      SQL
+    )
   end
 
   def self.update(memo_id, title, content)
