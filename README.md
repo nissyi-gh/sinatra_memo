@@ -10,6 +10,9 @@ git, Ruby, PostgreSQL, およびBundlerがインストールされている必�
 1. nissyi-gh/developから、自分のリポジトリへ[Fork](https://docs.github.com/ja/get-started/quickstart/fork-a-repo#forking-a-repository)します
 2. [git clone](https://docs.github.com/ja/get-started/quickstart/fork-a-repo#cloning-your-forked-repository)します
 3. DBはポート番号（デフォルトの）5432に接続します。ローカル環境でPostgreSQLを使用してDBの作成、起動を行なってください。
+  - 必要に応じて以下のDBを作成してください。
+    - アプリ自体を起動するには `fjord_memo_app` DBが必要です。
+    - テストを実行するには `fjord_memo_test` DBが必要です。
 4. 以降の操作はダウンロードしたディレクトリのルート（app.rbがある階層）で行います。
   - `git checkout develop_db` でdevelop_dbブランチに移動します。
   - `bundle install` をします。
