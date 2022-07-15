@@ -19,7 +19,7 @@ module MemoDb
   end
 
   def self.load
-    @@connect.exec_params("SELECT * FROM memos ORDER BY id;")
+    @@connect.exec_params('SELECT * FROM memos ORDER BY id;')
   end
 
   def self.delete(memo_id)
@@ -33,8 +33,7 @@ module MemoDb
   end
 
   def self.create(title, content)
-    @@connect.exec_params('INSERT INTO memos(title, content) VALUES ($1, $2)', [title, content]
-    )
+    @@connect.exec_params('INSERT INTO memos(title, content) VALUES ($1, $2)', [title, content])
   end
 
   def self.update(memo_id, title, content)
