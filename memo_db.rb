@@ -40,6 +40,6 @@ module MemoDb
   end
 
   def self.update(memo_id, title, content)
-    @@connect.exec('UPDATE memos SET title = $1, content = $2 WHERE id = $3', [title, content, memo_id])
+    @@connect.exec_params('UPDATE memos SET title = $1, content = $2 WHERE id = $3', [title, content, memo_id])
   end
 end
