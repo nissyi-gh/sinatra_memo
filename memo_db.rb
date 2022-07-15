@@ -3,7 +3,11 @@
 require 'pg'
 
 module MemoDb
-  @@connect = PG::Connection.open(dbname: 'postgres')
+  @@connect = if ENV['APP_ENV'] == 'test'
+                PG::Connection.open(dbname: 'fjord_memo_test')
+              else
+                PG::Connection.open(dbname: 'fjord_memo_app')
+              end
 
   def self.create_table
     @@connect.exec("CREATE TABLE memos(
