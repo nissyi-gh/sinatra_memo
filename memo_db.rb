@@ -10,7 +10,7 @@ module MemoDb
               end
 
   def self.create_table
-    @@connect.exec("CREATE TABLE memos(
+    @@connect.exec("CREATE TABLE IF NOT EXISTS memos(
       id SERIAL,
       title TEXT NOT NULL,
       content TEXT,
@@ -20,8 +20,6 @@ module MemoDb
 
   def self.load
     @@connect.exec_params("SELECT * FROM memos ORDER BY id;")
-  rescue StandardError
-    create_table
   end
 
   def self.delete(memo_id)
