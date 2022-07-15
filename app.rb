@@ -29,15 +29,21 @@ class App < Sinatra::Application
 
       erb :index
     else
-      Memo.create(title: params[:title], content: params[:content])
-
-      redirect to('/')
+      begin
+        Memo.create(title: params[:title], content: params[:content])
+      rescue PG::InvalidTextRepresentation
+        not_found
+      else
+        redirect to('/')
+      end
     end
   end
 
   get '/memos/:memo_id' do
     @memo = Memo.find(params[:memo_id])
-
+  rescue PG::InvalidTextRepresentation
+    not_found
+  else
     if @memo
       erb :edit
     else
@@ -47,17 +53,23 @@ class App < Sinatra::Application
 
   delete '/memos/:memo_id' do
     Memo.delete(params[:memo_id])
+  rescue PG::InvalidTextRepresentation
+    not_found
+  else
     redirect to('/')
   end
 
   patch '/memos/:memo_id' do
+    memo = Memo.find(params[:memo_id])
+  rescue PG::InvalidTextRepresentation
+    not_found
+  else
     if params[:title].empty?
       @error = ERROR_MESSAGE_WITHOUT_TITLE
-      @memo = Memo.find(params[:memo_id])
+      @memo = memo
 
       erb :edit
     else
-      memo = Memo.find(params[:memo_id])
       memo.patch(title: params[:title], content: params[:content])
       redirect to('/')
     end
