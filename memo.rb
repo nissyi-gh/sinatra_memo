@@ -21,8 +21,8 @@ class Memo
       load_from_db
     end
 
-    def all_ignore_deleted
-      load_from_db.reject(&:delete?)
+    def without_deleted
+      load_from_db.reject(&:deleted?)
     end
 
     def convert_pg_result_to_memo(memo)
@@ -79,7 +79,7 @@ class Memo
     }
   end
 
-  def delete?
+  def deleted?
     !deleted_at.nil?
   end
 end
