@@ -34,7 +34,7 @@ module MemoDb
     memo.ntuples.zero? ? nil : memo
   end
 
-  def self.create(title, content, created_at)
+  def self.create(title, content)
     @@connect.exec_params('INSERT INTO memos(title, content) VALUES ($1, $2)', [title, content]
     )
   end

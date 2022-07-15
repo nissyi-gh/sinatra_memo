@@ -45,7 +45,7 @@ class Memo
     def create(title:, content: nil)
       return if title.empty?
 
-      MemoDb.create(title, content, Time.now)
+      MemoDb.create(title, content)
     end
 
     def delete(memo_id)
