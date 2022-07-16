@@ -10,12 +10,17 @@ module MemoDb
               end
 
   def self.create_table
-    @@connect.exec("CREATE TABLE IF NOT EXISTS memos(
-      id SERIAL,
-      title TEXT NOT NULL,
-      content TEXT,
-      created_at TIMESTAMP NOT NULL DEFAULT now(),
-      deleted_at TIMESTAMP DEFAULT null);")
+    @@connect.exec(
+      <<-SQL
+        CREATE TABLE IF NOT EXISTS
+          memos(
+            id SERIAL,
+            title TEXT NOT NULL,
+            content TEXT,
+            created_at TIMESTAMP NOT NULL DEFAULT now()
+          );
+      SQL
+    )
   end
 
   def self.load
