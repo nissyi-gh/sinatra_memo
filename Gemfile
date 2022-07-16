@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-gem 'pg', '~> 1.4', '>= 1.4.1'
+gem 'pg'
 gem 'sinatra'
 gem 'sinatra-contrib'
 gem 'webrick'
