@@ -11,7 +11,7 @@ class App < Sinatra::Application
   Memo.load_from_db
 
   get '/' do
-    @memos = Memo.without_deleted
+    @memos = Memo.all
     erb :index
   end
 
@@ -23,7 +23,7 @@ class App < Sinatra::Application
     if params[:title].empty?
       @error = ERROR_MESSAGE_WITHOUT_TITLE
       @content = params[:content]
-      @memos = Memo.without_deleted
+      @memos = Memo.all
 
       erb :index
     else

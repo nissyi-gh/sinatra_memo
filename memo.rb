@@ -6,23 +6,18 @@ class Memo
   extend MemoDb
 
   attr_reader :id
-  attr_accessor :title, :content, :created_at, :deleted_at
+  attr_accessor :title, :content, :created_at
 
-  def initialize(id, title, content, created_at, deleted_at = nil)
+  def initialize(id, title, content, created_at)
     @id = id
     @title = title
     @content = content
     @created_at = created_at
-    @deleted_at = deleted_at
   end
 
   class << self
     def all
       load_from_db
-    end
-
-    def without_deleted
-      load_from_db.reject(&:deleted?)
     end
 
     def convert_pg_result_to_memo(memo)
@@ -31,8 +26,7 @@ class Memo
         memo[:id].to_i,
         memo[:title],
         memo[:content],
-        DateTime.parse(memo[:created_at]),
-        memo[:deleted_at] ? DateTime.parse(memo[:deleted_at]) : nil
+        DateTime.parse(memo[:created_at])
       )
     end
 
@@ -77,9 +71,5 @@ class Memo
       created_at: created_at,
       deleted_at: deleted_at
     }
-  end
-
-  def deleted?
-    !deleted_at.nil?
   end
 end

@@ -28,7 +28,7 @@ module MemoDb
   end
 
   def self.delete(memo_id)
-    @@connect.exec_params('UPDATE memos SET deleted_at = now() WHERE id = $1', [memo_id])
+    @@connect.exec_params('DELETE FROM memos WHERE id = $1', [memo_id])
   end
 
   def self.find(memo_id)
