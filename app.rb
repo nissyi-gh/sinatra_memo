@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require 'sinatra/base'
-# 終了時に不具合が発生するのでコメントアウト
-# require 'sinatra/reloader'
 require_relative './memo'
 
 class App < Sinatra::Application
