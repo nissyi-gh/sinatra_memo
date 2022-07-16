@@ -20,20 +20,19 @@ class Memo
       load_from_db
     end
 
-    def convert_pg_result_to_memo(memo)
-      memo.transform_keys!(&:to_sym)
+    def convert_pg_result_to_memo(pg_result)
       Memo.new(
-        memo[:id].to_i,
-        memo[:title],
-        memo[:content],
-        DateTime.parse(memo[:created_at])
+        pg_result['id'].to_i,
+        pg_result['title'],
+        pg_result['content'],
+        Time.parse(pg_result['created_at'])
       )
     end
 
     def find(memo_id)
-      memo = MemoDb.find(memo_id)
+      pg_result = MemoDb.find(memo_id)
 
-      convert_pg_result_to_memo(memo[0]) if memo
+      convert_pg_result_to_memo(pg_result[0]) if pg_result
     end
 
     def create(title:, content: nil)
@@ -61,15 +60,5 @@ class Memo
     self.title = title
     self.content = content
     MemoDb.update(id, title, content)
-  end
-
-  def to_h
-    {
-      id: id,
-      title: title,
-      content: content,
-      created_at: created_at,
-      deleted_at: deleted_at
-    }
   end
 end
