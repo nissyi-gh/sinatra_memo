@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-require_relative './memo_db'
+require 'pg'
 
 class Memo
-  extend MemoDb
-
   attr_reader :id
   attr_accessor :title, :content, :created_at
 
@@ -16,8 +14,17 @@ class Memo
   end
 
   class << self
+    def connection
+      @connection ||=
+        if ENV['APP_ENV'] == 'test'
+          PG::Connection.open(dbname: 'fjord_memo_test')
+        else
+          PG::Connection.open(dbname: 'fjord_memo_app')
+        end
+    end
+
     def all
-      load_from_db
+      connection.exec_params('SELECT * FROM memos ORDER BY id;').map { |pg_result| convert_pg_result_to_memo(pg_result) }
     end
 
     def convert_pg_result_to_memo(pg_result)
@@ -30,35 +37,36 @@ class Memo
     end
 
     def find(memo_id)
-      pg_result = MemoDb.find(memo_id)
+      pg_result = connection.exec_params('SELECT * FROM memos WHERE id = $1', [memo_id])
 
-      convert_pg_result_to_memo(pg_result[0]) if pg_result
+      # クエリの結果が0件でもpg_resultインスタンスを返すが、その場合にpg_result[0]を指定するとIndexErrorになるためany?でチェック
+      convert_pg_result_to_memo(pg_result[0]) if pg_result.any?
     end
 
     def create(title:, content: nil)
-      return if title.empty?
+      connection.exec_params('INSERT INTO memos(title, content) VALUES ($1, $2)', [title, content])
+    end
 
-      MemoDb.create(title, content)
+    def create_table
+      connection.exec(
+        <<-SQL
+          CREATE TABLE IF NOT EXISTS
+            memos(
+              id SERIAL,
+              title TEXT NOT NULL,
+              content TEXT,
+              created_at TIMESTAMP NOT NULL DEFAULT now()
+            );
+        SQL
+      )
     end
 
     def delete(memo_id)
-      MemoDb.delete(memo_id)
-    end
-
-    def load_from_db
-      memos = MemoDb.load
-
-      memos.map do |memo|
-        convert_pg_result_to_memo(memo)
-      end
+      connection.exec_params('DELETE FROM memos WHERE id = $1', [memo_id])
     end
   end
 
   def patch(title:, content:)
-    return if title.empty?
-
-    self.title = title
-    self.content = content
-    MemoDb.update(id, title, content)
+    Memo.connection.exec_params('UPDATE memos SET title = $1, content = $2 WHERE id = $3', [title, content, id])
   end
 end

@@ -7,8 +7,7 @@ class App < Sinatra::Application
   include ERB::Util
   ERROR_MESSAGE_WITHOUT_TITLE = 'タイトルが入力されていません。'
 
-  MemoDb.create_table
-  Memo.load_from_db
+  Memo.create_table
 
   get '/' do
     @memos = Memo.all

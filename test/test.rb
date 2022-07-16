@@ -19,7 +19,7 @@ class AppTest < Test::Unit::TestCase
   end
 
   def self.setup
-    MemoDb.create_table('memo_test')
+    Memo.create_table
   end
 
   def setup
@@ -30,7 +30,9 @@ class AppTest < Test::Unit::TestCase
   end
 
   def teardown
-    MemoDb.delete(load_latest_id)
+    return if Memo.all.size.zero?
+
+    Memo.delete(load_latest_id)
   end
 
   def test_home_response
