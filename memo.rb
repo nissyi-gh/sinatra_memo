@@ -3,16 +3,6 @@
 require 'pg'
 
 class Memo
-  attr_reader :id
-  attr_accessor :title, :content, :created_at
-
-  def initialize(id, title, content, created_at)
-    @id = id
-    @title = title
-    @content = content
-    @created_at = created_at
-  end
-
   class << self
     def connection
       @connection ||=
@@ -64,6 +54,16 @@ class Memo
     def delete(memo_id)
       connection.exec_params('DELETE FROM memos WHERE id = $1', [memo_id])
     end
+  end
+
+  attr_reader :id
+  attr_accessor :title, :content, :created_at
+
+  def initialize(id, title, content, created_at)
+    @id = id
+    @title = title
+    @content = content
+    @created_at = created_at
   end
 
   def patch(title:, content:)
