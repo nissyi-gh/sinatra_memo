@@ -27,6 +27,7 @@ class AppTest < Test::Unit::TestCase
     @content = 'example_text'
     @edit = 'edit'
     @error_message_without_tile = 'タイトルが入力されていません。'
+    @not_found = 'ページが見つかりませんでした。'
   end
 
   def teardown
@@ -42,7 +43,12 @@ class AppTest < Test::Unit::TestCase
 
   def test_not_found
     get '/hogehoge'
-    assert_equal 'ページが見つかりませんでした。', last_response.body
+    assert_equal @not_found, last_response.body
+  end
+
+  def test_access_not_exist_memo
+    get '/memos/0'
+    assert_equal @not_found, last_response.body
   end
 
   def test_post_valid_memo
