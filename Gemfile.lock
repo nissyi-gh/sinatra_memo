@@ -55,7 +55,7 @@ PLATFORMS
   arm64-darwin-21
 
 DEPENDENCIES
-  pg (~> 1.4, >= 1.4.1)
+  pg
   rack-test
   rubocop
   rubocop-fjord
