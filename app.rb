@@ -49,15 +49,14 @@ class App < Sinatra::Application
   end
 
   patch '/memos/:memo_id' do
-    memo = Memo.find(params[:memo_id])
-
     if params[:title].empty?
       @error = ERROR_MESSAGE_WITHOUT_TITLE
-      @memo = memo
+      @memo = Memo.find(params[:memo_id])
 
       erb :edit
     else
-      memo.patch(title: params[:title], content: params[:content])
+      Memo.update(id: params[:memo_id], title: params[:title], content: params[:content])
+
       redirect to('/')
     end
   end

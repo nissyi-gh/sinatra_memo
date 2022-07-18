@@ -54,6 +54,10 @@ class Memo
     def delete(memo_id)
       connection.exec_params('DELETE FROM memos WHERE id = $1', [memo_id])
     end
+
+    def update(id:, title:, content:)
+      connection.exec_params('UPDATE memos SET title = $1, content = $2 WHERE id = $3', [title, content, id])
+    end
   end
 
   attr_reader :id
@@ -64,9 +68,5 @@ class Memo
     @title = title
     @content = content
     @created_at = created_at
-  end
-
-  def patch(title:, content:)
-    Memo.connection.exec_params('UPDATE memos SET title = $1, content = $2 WHERE id = $3', [title, content, id])
   end
 end
