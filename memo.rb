@@ -33,7 +33,7 @@ class Memo
       convert_pg_result_to_memo(pg_result[0]) if pg_result.any?
     end
 
-    def create(title:, content: nil)
+    def create(title:, content:)
       connection.exec_params('INSERT INTO memos(title, content) VALUES ($1, $2)', [title, content])
     end
 
