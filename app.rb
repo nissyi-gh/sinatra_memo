@@ -11,6 +11,7 @@ class App < Sinatra::Application
 
   get '/' do
     @memos = Memo.all
+
     erb :index
   end
 
