@@ -60,8 +60,7 @@ class Memo
     end
   end
 
-  attr_reader :id
-  attr_accessor :title, :content, :created_at
+  attr_reader :id, :title, :content, :created_at
 
   def initialize(id, title, content, created_at)
     @id = id
