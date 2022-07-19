@@ -27,14 +27,14 @@ class Memo
     end
 
     def find(memo_id)
-      pg_result = connection.exec_params('SELECT * FROM memos WHERE id = $1', [memo_id])
+      pg_result = connection.exec_params('SELECT * FROM memos WHERE id = $1;', [memo_id])
 
       # クエリの結果が0件でもpg_resultインスタンスを返すが、その場合にpg_result[0]を指定するとIndexErrorになるためany?でチェック
       convert_pg_result_to_memo(pg_result[0]) if pg_result.any?
     end
 
     def create(title:, content:)
-      connection.exec_params('INSERT INTO memos(title, content) VALUES ($1, $2)', [title, content])
+      connection.exec_params('INSERT INTO memos(title, content) VALUES ($1, $2);', [title, content])
     end
 
     def create_table
@@ -52,11 +52,11 @@ class Memo
     end
 
     def delete(memo_id)
-      connection.exec_params('DELETE FROM memos WHERE id = $1', [memo_id])
+      connection.exec_params('DELETE FROM memos WHERE id = $1;', [memo_id])
     end
 
     def update(id:, title:, content:)
-      connection.exec_params('UPDATE memos SET title = $1, content = $2 WHERE id = $3', [title, content, id])
+      connection.exec_params('UPDATE memos SET title = $1, content = $2 WHERE id = $3;', [title, content, id])
     end
   end
 
