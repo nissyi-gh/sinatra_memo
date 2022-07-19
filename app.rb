@@ -52,7 +52,8 @@ class App < Sinatra::Application
   patch '/memos/:memo_id' do
     if params[:title].empty?
       @error = ERROR_MESSAGE_WITHOUT_TITLE
-      @memo = Memo.find(params[:memo_id])
+      previous_memo = Memo.find(params[:memo_id])
+      @memo = Memo.new(previous_memo.id, previous_memo.title, params[:content], previous_memo.created_at)
 
       erb :edit
     else
