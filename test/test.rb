@@ -136,4 +136,16 @@ class AppTest < Test::Unit::TestCase
     assert_includes last_response.body, @title
     assert_includes last_response.body, @content
   end
+
+  def test_remain_edit_content_after_invalid_update
+    post '/memos', { title: @title, content: @content }
+    follow_redirect!
+    assert_includes last_response.body, @title
+    assert_includes last_response.body, @content
+
+    get "/memos/#{load_latest_id}"
+    patch "/memos/#{load_latest_id}", { title: '', content: @content + @edit }
+    assert_includes last_response.body, @title
+    assert_includes last_response.body, @content + @edit
+  end
 end
