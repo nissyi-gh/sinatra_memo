@@ -4,26 +4,8 @@ require 'pg'
 
 class Memo
   class << self
-    def connection
-      @connection ||=
-        if ENV['APP_ENV'] == 'test'
-          PG::Connection.open(dbname: 'fjord_memo_test')
-        else
-          PG::Connection.open(dbname: 'fjord_memo_app')
-        end
-    end
-
     def all
       connection.exec_params('SELECT * FROM memos ORDER BY id;').map { |pg_result| convert_pg_result_to_memo(pg_result) }
-    end
-
-    def convert_pg_result_to_memo(pg_result)
-      Memo.new(
-        pg_result['id'].to_i,
-        pg_result['title'],
-        pg_result['content'],
-        Time.parse(pg_result['created_at'])
-      )
     end
 
     def find(memo_id)
@@ -57,6 +39,26 @@ class Memo
 
     def update(id:, title:, content:)
       connection.exec_params('UPDATE memos SET title = $1, content = $2 WHERE id = $3;', [title, content, id])
+    end
+
+    private
+
+    def connection
+      @connection ||=
+        if ENV['APP_ENV'] == 'test'
+          PG::Connection.open(dbname: 'fjord_memo_test')
+        else
+          PG::Connection.open(dbname: 'fjord_memo_app')
+        end
+    end
+
+    def convert_pg_result_to_memo(pg_result)
+      Memo.new(
+        pg_result['id'].to_i,
+        pg_result['title'],
+        pg_result['content'],
+        Time.parse(pg_result['created_at'])
+      )
     end
   end
 
