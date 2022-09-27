@@ -2,7 +2,7 @@
 
 ENV['APP_ENV'] = 'test'
 
-require_relative './app'
+require_relative '../app'
 require 'test/unit'
 require 'rack/test'
 
@@ -14,12 +14,26 @@ class AppTest < Test::Unit::TestCase
     App
   end
 
+  def load_latest_id
+    Memo.all.last.id
+  end
+
+  def self.setup
+    Memo.create_table
+  end
+
   def setup
-    Memo.clear
     @title = 'test_title'
     @content = 'example_text'
     @edit = 'edit'
     @error_message_without_tile = 'タイトルが入力されていません。'
+    @not_found = 'ページが見つかりませんでした。'
+  end
+
+  def teardown
+    return if Memo.all.size.zero?
+
+    Memo.delete(load_latest_id)
   end
 
   def test_home_response
@@ -29,7 +43,12 @@ class AppTest < Test::Unit::TestCase
 
   def test_not_found
     get '/hogehoge'
-    assert_equal 'ページが見つかりませんでした。', last_response.body
+    assert_equal @not_found, last_response.body
+  end
+
+  def test_access_not_exist_memo
+    get '/memos/0'
+    assert_equal @not_found, last_response.body
   end
 
   def test_post_valid_memo
@@ -61,7 +80,7 @@ class AppTest < Test::Unit::TestCase
     assert_includes last_response.body, @title
     assert_includes last_response.body, @content
 
-    delete '/memos/1'
+    delete "/memos/#{load_latest_id}"
     follow_redirect!
     assert_not_includes last_response.body, @title
     assert_not_includes last_response.body, @content
@@ -73,7 +92,7 @@ class AppTest < Test::Unit::TestCase
     assert_includes last_response.body, @title
     assert_includes last_response.body, @content
 
-    patch '/memos/1', { title: @title + @edit, content: @content + @edit }
+    patch "/memos/#{load_latest_id}", { title: @title + @edit, content: @content + @edit }
     follow_redirect!
     assert_includes last_response.body, @title + @edit
     assert_includes last_response.body, @content + @edit
@@ -85,7 +104,7 @@ class AppTest < Test::Unit::TestCase
     assert_includes last_response.body, @title
     assert_includes last_response.body, @content
 
-    patch '/memos/1', { title: @title + @edit, content: @content }
+    patch "/memos/#{load_latest_id}", { title: @title + @edit, content: @content }
     follow_redirect!
     assert_includes last_response.body, @title + @edit
     assert_includes last_response.body, @content
@@ -97,7 +116,7 @@ class AppTest < Test::Unit::TestCase
     assert_includes last_response.body, @title
     assert_includes last_response.body, @content
 
-    patch '/memos/1', { title: @title, content: @content + @edit }
+    patch "/memos/#{load_latest_id}", { title: @title, content: @content + @edit }
     follow_redirect!
     assert_includes last_response.body, @title
     assert_includes last_response.body, @content + @edit
@@ -109,12 +128,24 @@ class AppTest < Test::Unit::TestCase
     assert_includes last_response.body, @title
     assert_includes last_response.body, @content
 
-    get '/memos/1'
-    patch '/memos/1', { title: '', content: @content }
+    get "/memos/#{load_latest_id}"
+    patch "/memos/#{load_latest_id}", { title: '', content: @content }
     assert last_response.ok?
-    assert_equal "#{TEST_HOST}memos/1", last_request.url.encode('UTF-8')
+    assert_equal "#{TEST_HOST}memos/#{load_latest_id}", last_request.url.encode('UTF-8')
     assert_includes last_response.body, @error_message_without_tile
     assert_includes last_response.body, @title
     assert_includes last_response.body, @content
+  end
+
+  def test_remain_edit_content_after_invalid_update
+    post '/memos', { title: @title, content: @content }
+    follow_redirect!
+    assert_includes last_response.body, @title
+    assert_includes last_response.body, @content
+
+    get "/memos/#{load_latest_id}"
+    patch "/memos/#{load_latest_id}", { title: '', content: @content + @edit }
+    assert_includes last_response.body, @title
+    assert_includes last_response.body, @content + @edit
   end
 end

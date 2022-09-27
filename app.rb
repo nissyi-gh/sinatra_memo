@@ -1,16 +1,17 @@
 # frozen_string_literal: true
 
 require 'sinatra/base'
-# 終了時に不具合が発生するのでコメントアウト
-# require 'sinatra/reloader'
 require_relative './memo'
 
 class App < Sinatra::Application
   include ERB::Util
   ERROR_MESSAGE_WITHOUT_TITLE = 'タイトルが入力されていません。'
 
+  Memo.create_table
+
   get '/' do
-    @memos = Memo.all_ignore_deleted
+    @memos = Memo.all
+
     erb :index
   end
 
@@ -22,7 +23,7 @@ class App < Sinatra::Application
     if params[:title].empty?
       @error = ERROR_MESSAGE_WITHOUT_TITLE
       @content = params[:content]
-      @memos = Memo.all_ignore_deleted
+      @memos = Memo.all
 
       erb :index
     else
@@ -34,23 +35,30 @@ class App < Sinatra::Application
 
   get '/memos/:memo_id' do
     @memo = Memo.find(params[:memo_id])
-    erb :edit
+
+    if @memo
+      erb :edit
+    else
+      not_found
+    end
   end
 
   delete '/memos/:memo_id' do
     Memo.delete(params[:memo_id])
+
     redirect to('/')
   end
 
   patch '/memos/:memo_id' do
     if params[:title].empty?
       @error = ERROR_MESSAGE_WITHOUT_TITLE
-      @memo = Memo.find(params[:memo_id])
+      previous_memo = Memo.find(params[:memo_id])
+      @memo = Memo.new(previous_memo.id, previous_memo.title, params[:content], previous_memo.created_at)
 
       erb :edit
     else
-      memo = Memo.find(params[:memo_id])
-      memo.patch(title: params[:title], content: params[:content])
+      Memo.update(id: params[:memo_id], title: params[:title], content: params[:content])
+
       redirect to('/')
     end
   end
